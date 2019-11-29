@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Nov 24 22:56:23 2019
-
 @author: Nehal
 """
 
