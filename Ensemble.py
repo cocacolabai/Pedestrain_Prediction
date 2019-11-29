@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov 27 11:06:51 2019
-
 @author: Nehal
 """
 # Bagged Decision Trees for Classification
