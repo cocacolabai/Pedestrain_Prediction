@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov 20 00:08:58 2019
-
 @author: Nehal
 """
 
@@ -9,7 +7,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
 from Linear import LinearModels
-from Ensembles import EnsembleModels
+from Ensemble import EnsembleModels
 from sklearn.metrics import roc_curve, accuracy_score, confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 from sklearn.dummy import DummyClassifier
@@ -19,7 +17,7 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.neighbors import KNeighborsClassifier
 def main():
     
-    filepath = r'D:\uOttawa\ML\Project\Automobile.csv'
+    filepath = f'Automobile.csv'
     
     df = pd.read_csv(filepath)
     
