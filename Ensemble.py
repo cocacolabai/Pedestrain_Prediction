@@ -5,11 +5,14 @@
 # Bagged Decision Trees for Classification
 
 from sklearn import model_selection
-from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import BaggingClassifier, RandomForestClassifier, ExtraTreesClassifier, AdaBoostClassifier, GradientBoostingClassifier, VotingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import roc_curve, accuracy_score, confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 import pandas as pd
+from scipy import stats
 
 def BaggingClassif(X_train,y_train,X_test):
     seed = 7
@@ -65,6 +68,17 @@ def GradientTreeBoost(X_train,y_train,X_test):
     
     return y_pred,scores
 
+def VotingClassif(X_train,y_train,X_test):
+    clf1 = LogisticRegression(solver='lbfgs', multi_class='multinomial',
+                    random_state=1)
+    clf2 = RandomForestClassifier(n_estimators=50, random_state=1)
+    clf3 = GaussianNB()
+    model = VotingClassifier(estimators=[('lr', clf1), ('rf', clf2), ('gnb', clf3)],voting='soft')
+    scores = model_selection.cross_val_score(model, X_train, y_train, cv=10)
+    model = model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    
+    return y_pred,scores
 
 def EnsembleModels(X_train,y_train,X_test, y_test):
     print("Result using Bagging Classification:\n")
@@ -87,13 +101,28 @@ def EnsembleModels(X_train,y_train,X_test, y_test):
     y_gtb, scores_gtb = GradientTreeBoost(X_train,y_train,X_test)
     printReport(y_test,y_gtb)
     
-    data2 = {'Bagging':scores_bag,'Random Forest':scores_rf, 'Extra Tree':scores_et}
+    print("Result using Voting Classification:\n")
+    y_vc, scores_vc = VotingClassif(X_train,y_train,X_test)
+    printReport(y_test,y_vc)
+    
+    data2 = {'Bagging':scores_bag,'Random Forest':scores_rf, 'Extra Tree':scores_et, 'AdaBoost':scores_ab,'GradientBoost':scores_gtb,'Voting':scores_vc}
     df2 = pd.DataFrame(data=data2)
     
-#    paired_t_test(df2)
+    paired_t_test(df2)
     print(df2)
     
     return
+
+def paired_t_test(df2):
+    for x in range(0,len(df2.columns)):
+        for y in range(x+1,len(df2.columns)):
+            col1 = df2.columns[x]
+            col2 = df2.columns[y]
+            before = df2[col1]
+            after = df2[col2]
+            print(col1,"-",col2)
+            print(stats.ttest_rel(a=before.values,b=after.values))
+            print("")
 
 def printReport(y_test,y_predict):
     #finding the accuracy of results

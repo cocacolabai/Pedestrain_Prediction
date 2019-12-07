@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 def Linear_SVC(X_train,y_train,X_test):
-    clf = LinearSVC(random_state = 100,tol = 1e-5)
+    clf = LinearSVC(random_state = 100,tol = 1e-5, max_iter=3000)
     scores = cross_val_score(clf, X_train, y_train, cv =10 )
     clf = clf.fit(X_train,y_train)
     y_pred = clf.predict(X_test)
@@ -38,6 +38,7 @@ def Ridge_Classifier(X_train,y_train,X_test):
 
 def printReport(y_test,y_predict):
     #finding the accuracy of results
+    
     acc = accuracy_score(y_test, y_predict)
     print("Accuracy comes out to be: ",acc)
     #calculating precision and recall
